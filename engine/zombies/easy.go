@@ -2,6 +2,7 @@ package zombies
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/sheirys/zombebattle/engine"
@@ -21,10 +22,11 @@ func (z *Easy) Summon(e chan engine.Event, ctx context.Context) error {
 	z.events = e
 	z.ctx = ctx
 	go z.startLiving()
+	log.Printf("zombie '%s' has been summoned!", z.name)
 	return nil
 }
 
-// Kill kills zombie. Killed zombie does not move.
+// Kill zombie. Killed zombie does not move.
 // FIXME: implement state e.g.: zombie.IsAlive()
 func (z *Easy) Kill() error {
 	z.heartBeat.Stop()
@@ -36,6 +38,13 @@ func (z *Easy) Kill() error {
 func (z *Easy) Reset(p engine.Pos) error {
 	z.pos = p
 	return nil
+}
+
+// Hit zombie with arrow!
+func (z *Easy) Hit() {}
+
+func (z *Easy) ProcessEvent(e engine.Event) {
+	log.Printf("zombie %s got event %s", z.name, e.String())
 }
 
 // Pos will return current zombie position
@@ -50,7 +59,9 @@ func (z *Easy) startLiving() {
 	for {
 		select {
 		case <-z.heartBeat.C:
-			z.move()
+			move := z.nextMove()
+			log.Printf("zombie '%s' has moved '%s'", z.name, move.String())
+			z.events <- move
 		case <-z.ctx.Done():
 			z.heartBeat.Stop()
 			return
@@ -58,10 +69,10 @@ func (z *Easy) startLiving() {
 	}
 }
 
-func (z *Easy) move() {
+func (z *Easy) nextMove() engine.Event {
 	// omg, omg this dumb Easy zombie can move only in X axis !!
 	z.pos.X++
-	z.events <- engine.Event{
+	return engine.Event{
 		Type:  "WALK",
 		Actor: z.name,
 		X:     z.pos.X,

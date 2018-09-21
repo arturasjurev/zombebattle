@@ -1,30 +1,22 @@
 package main
 
+import (
+	"github.com/sheirys/zombebattle/engine"
+	"github.com/sheirys/zombebattle/engine/rooms"
+	"github.com/sheirys/zombebattle/engine/zombies"
+)
+
 func main() {
 
-	/*
-		// this is old prototype code. ignore this for now.
-		// FIXME: reimplement this
-		ctx, cancel := context.WithCancel(context.Background())
-		stop := make(chan os.Signal, 1)
-		signal.Notify(stop, os.Interrupt)
+	server := &engine.Server{
+		Addr: ":3333",
+		DefaultRoom: &rooms.TrainingGrounds{
+			Zombies: []engine.Zombie{
+				&zombies.Easy{},
+			},
+		},
+	}
 
-		room := rooms.PlayRoom{}
-		zombie := &zombies.Easy{}
-
-		room.AddZombie(zombie)
-
-		room.Start(ctx)
-
-		for {
-			select {
-			case event := <-room.EventStream():
-				log.Println(event.String())
-			case <-stop:
-				cancel()
-				return
-			}
-		}
-	*/
+	server.Run()
 
 }

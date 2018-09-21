@@ -14,9 +14,13 @@ type Zombie interface {
 	// to e chan. Context can be used to stop zombies.
 	Summon(e chan Event, ctx context.Context) error
 
+	ProcessEvent(e Event)
 	// Kill zombie now. This will be called when room decides that this
 	// zombie should die.
 	Kill() error
+
+	// Hit means that this zombie now has an arrow in his ass.
+	Hit()
 
 	// Reset will move zombie to given position. But it does not respawn
 	// zombie if zombie is already died.

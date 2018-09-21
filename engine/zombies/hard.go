@@ -40,6 +40,9 @@ func (z *Hard) Reset(p engine.Pos) error {
 	return nil
 }
 
+// Hit zombie with arrow!
+func (z *Hard) Hit() {}
+
 // Pos will return current zombie position
 func (z *Hard) Pos() engine.Pos {
 	return z.pos

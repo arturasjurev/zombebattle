@@ -1,17 +1,13 @@
-package communication
+package engine
 
 import (
 	"strconv"
 	"strings"
-
-	// FIXME: communication package should be moved out of engine scope
-	// because it is easy to end with cyclic import.
-	"github.com/sheirys/zombebattle/engine"
 )
 
 // Parse satisfies CommunicationChannel interface and can be used as player
 // input parser. This version does not support extended commands set.
-func Parse(b []byte) (engine.Event, error) {
+func Parse(b []byte) (Event, error) {
 	s := string(b)
 	s = strings.Trim(s, "\n")
 	s = strings.Trim(s, "\r")
@@ -20,7 +16,7 @@ func Parse(b []byte) (engine.Event, error) {
 	// expect that command has at last 2 strings.
 	args := strings.Split(s, " ")
 	if len(args) < 2 {
-		return engine.Event{}, engine.ErrBadInput
+		return Event{}, ErrBadInput
 	}
 
 	// commands should be case-insensitive
@@ -30,35 +26,35 @@ func Parse(b []byte) (engine.Event, error) {
 
 	switch {
 	// parse SHOOT command e.g.: SHOOT 1 2
-	case args[0] == engine.EventShoot && len(args) == 3:
+	case args[0] == EventShoot && len(args) == 3:
 		return parseShoot(args)
 	// parse START command e.g.: START ivan
-	case args[0] == engine.EventStart && len(args) == 2:
+	case args[0] == EventStart && len(args) == 2:
 		return parseStart(args)
 	default:
-		return engine.Event{}, engine.ErrBadInput
+		return Event{}, ErrBadInput
 	}
 
 	// FIXME: wtf, if we reach this then this is a bug.
 	// return engine.Event{}, engine.ErrBadInput
 }
 
-func parseShoot(cmd []string) (engine.Event, error) {
+func parseShoot(cmd []string) (Event, error) {
 
 	// parse X from command
 	x, err := strconv.Atoi(cmd[1])
 	if err != nil {
-		return engine.Event{}, err
+		return Event{}, err
 	}
 
 	// parse Y from command
 	y, err := strconv.Atoi(cmd[2])
 	if err != nil {
-		return engine.Event{}, err
+		return Event{}, err
 	}
 
-	event := engine.Event{
-		Type: engine.EventShoot,
+	event := Event{
+		Type: EventShoot,
 		X:    x,
 		Y:    y,
 		// FIXME: this is bad. We reach player name only in room, so
@@ -68,9 +64,9 @@ func parseShoot(cmd []string) (engine.Event, error) {
 	return event, nil
 }
 
-func parseStart(cmd []string) (engine.Event, error) {
-	return engine.Event{
-		Type:  engine.EventStart,
+func parseStart(cmd []string) (Event, error) {
+	return Event{
+		Type:  EventStart,
 		Actor: cmd[1],
 	}, nil
 }
