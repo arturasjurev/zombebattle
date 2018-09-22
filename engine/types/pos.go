@@ -1,4 +1,4 @@
-package engine
+package types
 
 // Pos is just a struct where coordinates are stored.
 // Yes, yes these zombies live in strage world and can move

@@ -1,4 +1,4 @@
-package engine
+package types
 
 import "fmt"
 
@@ -14,12 +14,11 @@ const (
 	EventStart = "START" // when client wants start game.
 
 	// extended communication channel commands. These commands extends
-	// default communication channel protocol. But as it is impossible
-	// to support multiple rooms with multiple players we need extended
-	// commands for this. These commands will not work in default room.
-	EventWorldEnd = "WINNER" // when all zombies killed `WINNER jonas`
-	EventJoin     = "JOIN"   // join to given room `JOIN woods`
-	EventList     = "LIST"   // lists available rooms `LIST`
+	// default communication channel protocol. As there is no documentation
+	// about how allow mutliroom server to join multiple clients, we need
+	// additional commands to join room or create a new one.
+	EventJoin = "JOIN" // join to given room `JOIN woods`
+	EventNew  = "NEW"  // create new room
 )
 
 // Event will be used for various events in this engine. For example if player
@@ -45,7 +44,7 @@ func (e *Event) String() (s string) {
 	case EventShoot:
 		s = fmt.Sprintf("%s %d %d", e.Type, e.X, e.Y)
 	case EventBoom:
-		s = fmt.Sprintf("%s %s %d", e.Type, e.Actor, e.Points)
+		s = fmt.Sprintf("%s %s %d %v", e.Type, e.Actor, e.Points, e.Hits)
 	}
 	return
 }

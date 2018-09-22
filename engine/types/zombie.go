@@ -1,4 +1,4 @@
-package engine
+package types
 
 import "context"
 
@@ -12,20 +12,22 @@ type Zombie interface {
 
 	// Summon will spanw a zombie and all his movements/events will be sent
 	// to e chan. Context can be used to stop zombies.
-	Summon(e chan Event, ctx context.Context) error
+	Summon(moves chan Event, ctx context.Context) error
 
-	ProcessEvent(e Event)
+	// GetName will return zombies name.
+	GetName() string
+
 	// Kill zombie now. This will be called when room decides that this
 	// zombie should die.
 	Kill() error
 
-	// Hit means that this zombie now has an arrow in his ass.
-	Hit()
-
 	// Reset will move zombie to given position. But it does not respawn
 	// zombie if zombie is already died.
-	Reset(p Pos) error
+	Reset(x, y int) error
 
-	// Post will return current zombie possition.
-	Pos() Pos
+	// GetPos should return position of zombie.
+	GetPos() (x, y int)
+
+	// Hit will be called when zombie gets an arrow in his ass.
+	Hit()
 }

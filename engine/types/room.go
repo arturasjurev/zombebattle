@@ -1,4 +1,4 @@
-package engine
+package types
 
 // Room defines what we expect from room. Please notice that we do not provide
 // map size here. Map size is not a requirement and if you want you can
@@ -11,6 +11,9 @@ type Room interface {
 	// knows where user wants to join.
 	Name() string
 
+	// SetName should set name for this room.
+	SetName(name string)
+
 	// Run should start the room.
 	Run() error
 
@@ -22,5 +25,5 @@ type Room interface {
 	AddZombie(z Zombie) error
 
 	// AddPlayer should attach client to this room.
-	AddPlayer(c *Client) error
+	AddPlayer(p Player) error
 }
