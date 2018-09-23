@@ -31,6 +31,7 @@ func (s *Server) init() error {
 
 	signal.Notify(s.stop, killSignals...)
 
+	// move default room to the lobby so it will be visible for players.
 	if s.DefaultRoom != nil {
 		s.AddRoom(types.ServerRoom{
 			Room:    s.DefaultRoom,

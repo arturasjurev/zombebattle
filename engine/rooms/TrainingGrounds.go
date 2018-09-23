@@ -30,7 +30,7 @@ func (p *TrainingGrounds) SetName(n string) {
 
 func (p *TrainingGrounds) hello() string {
 	msg := "# You appeared in sandy yard. Sharp stones are \n"
-	msg += "# tickling your legs. You feel unconfortable. In\n"
+	msg += "# tickling your legs. You feel uncomfortable. In\n"
 	msg += "# front of you there is a sign: \n"
 	msg += "# " + p.name + "\n"
 	msg += "# Welcome to the training grounds. Here you can try\n"

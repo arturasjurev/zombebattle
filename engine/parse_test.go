@@ -4,26 +4,27 @@ import (
 	"testing"
 
 	"github.com/sheirys/zombebattle/engine"
+	"github.com/sheirys/zombebattle/engine/types"
 )
 
 func TestParse(t *testing.T) {
 	testTable := []struct {
 		Input         []byte
-		ExpectedEvent engine.Event
+		ExpectedEvent types.Event
 		ExpectedErr   error
 	}{
 		{
 			Input: []byte("start jonas"),
-			ExpectedEvent: engine.Event{
-				Type:  engine.EventStart,
+			ExpectedEvent: types.Event{
+				Type:  types.EventStart,
 				Actor: "JONAS",
 			},
 			ExpectedErr: nil,
 		},
 		{
 			Input: []byte("shoot 1 2"),
-			ExpectedEvent: engine.Event{
-				Type: engine.EventShoot,
+			ExpectedEvent: types.Event{
+				Type: types.EventShoot,
 				X:    1,
 				Y:    2,
 			},
@@ -31,8 +32,8 @@ func TestParse(t *testing.T) {
 		},
 		{
 			Input: []byte("join castle1"),
-			ExpectedEvent: engine.Event{
-				Type:  engine.EventJoin,
+			ExpectedEvent: types.Event{
+				Type:  types.EventJoin,
 				Actor: "CASTLE1",
 			},
 			ExpectedErr: nil,

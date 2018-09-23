@@ -7,7 +7,7 @@ package types
 type Room interface {
 
 	// Name should return room name. It is ok if room does not have or has
-	// empty name. Room name basicly is used in multiroom server so server
+	// empty name. Room name basiclly is used in multiroom server so server
 	// knows where user wants to join.
 	Name() string
 
