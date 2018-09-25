@@ -226,7 +226,7 @@ func (p *TheWall) prepare() error {
 
 func (p *TheWall) hello() string {
 	msg := "# " + p.name + "\n"
-	msg += "# Zombies are comming !!! Prepare your bows warriors !!!\n"
+	msg += "# Zombies are coming !!! Prepare your bows warriors !!!\n"
 	return msg
 }
 

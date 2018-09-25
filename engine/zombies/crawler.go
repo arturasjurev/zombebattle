@@ -11,7 +11,7 @@ import (
 
 // Crawler is a zombie that shiuld be used in TheWall room. This zombie will
 // try to climb on the wall and kill archer. When zombie reaches wall it is room
-// responsability to kill that zombie and respawn it.
+// responsibility to kill that zombie and respawn it.
 type Crawler struct {
 	name       string
 	x, y       int64
