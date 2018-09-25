@@ -19,26 +19,14 @@ type TrainingGrounds struct {
 	name         string
 }
 
-// Name will return rooms name
+// Name will return rooms name.
 func (p *TrainingGrounds) Name() string {
 	return p.name
 }
 
+// SetName will set name for this room.
 func (p *TrainingGrounds) SetName(n string) {
 	p.name = n
-}
-
-func (p *TrainingGrounds) hello() string {
-	msg := "# You appeared in sandy yard. Sharp stones are \n"
-	msg += "# tickling your legs. You feel uncomfortable. In\n"
-	msg += "# front of you there is a sign: \n"
-	msg += "# " + p.name + "\n"
-	msg += "# Welcome to the training grounds. Here you can try\n"
-	msg += "# to kill zombies with your friends. Use your bow\n"
-	msg += "# with `SHOOT <x> <y>` command if you want to kill\n"
-	msg += "# a zombie. Be awere that some zoombies needs to \n"
-	msg += "# be hit twice or more before they die.\n"
-	return msg
 }
 
 // AddPlayer will attach client to this room.
@@ -47,7 +35,7 @@ func (p *TrainingGrounds) AddPlayer(player types.Player) error {
 	go func() {
 		p.players = append(p.players, player)
 		for {
-			if event, open := <-player.GetEvent(); open {
+			if event, open := player.GetEvent(); open {
 				p.playerEvents <- event
 			} else {
 				return
@@ -60,7 +48,8 @@ func (p *TrainingGrounds) AddPlayer(player types.Player) error {
 // AddZombie will attach zombie to this room.
 func (p *TrainingGrounds) AddZombie(z types.Zombie) error {
 	p.Zombies = append(p.Zombies, z)
-	go z.Summon(p.zombieEvents, p.ctx)
+	z.Summon(p.ctx, p.zombieEvents)
+	z.Run()
 	return nil
 }
 
@@ -93,6 +82,16 @@ func (p *TrainingGrounds) Run() error {
 		}
 	}()
 	return nil
+}
+
+// ZombiesWon will always return false here, because we cannot win in training.
+func (p *TrainingGrounds) ZombiesWon() bool {
+	return false
+}
+
+// PlayersWon will always return false here, because we cannot win in training.
+func (p *TrainingGrounds) PlayersWon() bool {
+	return false
 }
 
 func (p *TrainingGrounds) sendEventToPlayers(e types.Event) {
@@ -129,7 +128,24 @@ func (p *TrainingGrounds) prepare() error {
 
 	// summon all pre-defined zombies.
 	for _, zombie := range p.Zombies {
-		zombie.Summon(p.zombieEvents, p.ctx)
+		zombie.Summon(p.ctx, p.zombieEvents)
+		zombie.Run()
 	}
 	return nil
+}
+
+func (p *TrainingGrounds) hello() string {
+	msg := "# You appeared in sandy yard. Sharp stones are \n"
+	msg += "# tickling your legs. You feel uncomfortable. In\n"
+	msg += "# front of you there is a sign: \n"
+	msg += "# \n"
+	msg += "# ================================================ \n"
+	msg += "# " + p.name + "\n"
+	msg += "# Welcome to the training grounds. Here you can try\n"
+	msg += "# to kill zombies with your friends. Use your bow\n"
+	msg += "# with `SHOOT <x> <y>` command if you want to kill\n"
+	msg += "# a zombie. Be awere that some zoombies needs to \n"
+	msg += "# be hit twice or more before they die.\n"
+	msg += "# ================================================ \n"
+	return msg
 }

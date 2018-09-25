@@ -12,7 +12,9 @@ type Zombie interface {
 
 	// Summon will spanw a zombie and all his movements/events will be sent
 	// to e chan. Context can be used to stop zombies.
-	Summon(moves chan Event, ctx context.Context) error
+	Summon(ctx context.Context, moves chan Event) error
+
+	Run()
 
 	// GetName will return zombies name.
 	GetName() string
@@ -23,11 +25,14 @@ type Zombie interface {
 
 	// Reset will move zombie to given position. But it does not respawn
 	// zombie if zombie is already died.
-	Reset(x, y int) error
+	Reset(x, y int64) error
 
 	// GetPos should return position of zombie.
-	GetPos() (x, y int)
+	GetPos() (x, y int64)
 
 	// Hit will be called when zombie gets an arrow in his ass.
 	Hit()
+
+	// Next should force zombie to move.
+	Next()
 }

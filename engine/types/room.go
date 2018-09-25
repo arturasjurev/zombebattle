@@ -26,4 +26,10 @@ type Room interface {
 
 	// AddPlayer should attach client to this room.
 	AddPlayer(p Player) error
+
+	// ZombiesWon should return true if zombies won this room.
+	ZombiesWon() bool
+
+	// PlayersWon should return true if players won this room.
+	PlayersWon() bool
 }

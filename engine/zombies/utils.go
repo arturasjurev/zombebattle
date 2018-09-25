@@ -18,15 +18,15 @@ func init() {
 	rand.Seed(time.Now().Unix())
 }
 
-// pickName will generate random name for zombie e.g.: wombat-imbecile.
-func pickName() string {
+// PickName will generate random name for zombie e.g.: wombat-imbecile.
+func PickName() string {
 	a := fname[rand.Intn(len(fname))]
 	b := lname[rand.Intn(len(lname))]
 	return fmt.Sprintf("%s-%s", a, b)
 }
 
-// randomPos() will return random position for zombie. This is used for Hard
+// RandomPos will return random position for zombie. This is used for Hard
 // zombie because he wants to jump like zombie rabbit.
-func randomPos(min, max int) int {
-	return rand.Intn(max-min) + min
+func RandomPos(min, max int64) int64 {
+	return rand.Int63n(max-min) + min
 }

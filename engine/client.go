@@ -8,6 +8,7 @@ import (
 	"github.com/sheirys/zombebattle/engine/types"
 )
 
+// Client holds telnet connection for player.
 type Client struct {
 	Name         string
 	Conn         net.Conn
@@ -15,6 +16,7 @@ type Client struct {
 	selectedRoom string
 }
 
+// Run starts to handle connection messages.
 func (c *Client) Run() {
 	c.eventStream = make(chan types.Event)
 	for {
@@ -106,12 +108,18 @@ func (c *Client) SelectedRoom() string {
 // GetEvent will pass action what client is trying to do. When we parse input
 // from client, we will transform input to event, and all events will be queued
 // into this channel.
-func (c *Client) GetEvent() <-chan types.Event {
-	return c.eventStream
+func (c *Client) GetEvent() (types.Event, bool) {
+	event, ok := <-c.eventStream
+	return event, ok
 }
 
 // ProcessEvent will handle event passed by room. For example if zombie dies
 // or other player is shooting or someone wins the room.
 func (c *Client) ProcessEvent(e types.Event) {
 	c.Conn.Write([]byte(e.String() + "\n"))
+}
+
+// ProduceEvent will add event into clients event stream.
+func (c *Client) ProduceEvent(e types.Event) {
+	c.eventStream <- e
 }

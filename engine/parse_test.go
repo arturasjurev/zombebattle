@@ -31,12 +31,40 @@ func TestParse(t *testing.T) {
 			ExpectedErr: nil,
 		},
 		{
+			Input:         []byte("shoot a 2b"),
+			ExpectedEvent: types.Event{},
+			ExpectedErr:   engine.ErrBadInput,
+		},
+		{
+			Input:         []byte("shoot 1 2b"),
+			ExpectedEvent: types.Event{},
+			ExpectedErr:   engine.ErrBadInput,
+		},
+		{
 			Input: []byte("join castle1"),
 			ExpectedEvent: types.Event{
 				Type:  types.EventJoin,
 				Actor: "CASTLE1",
 			},
 			ExpectedErr: nil,
+		},
+		{
+			Input: []byte("new castle1"),
+			ExpectedEvent: types.Event{
+				Type:  types.EventNew,
+				Actor: "CASTLE1",
+			},
+			ExpectedErr: nil,
+		},
+		{
+			Input:         []byte("fat mama"),
+			ExpectedEvent: types.Event{},
+			ExpectedErr:   engine.ErrBadInput,
+		},
+		{
+			Input:         []byte("jashgkjhdlkfjhaluefshalusf"),
+			ExpectedEvent: types.Event{},
+			ExpectedErr:   engine.ErrBadInput,
 		},
 	}
 

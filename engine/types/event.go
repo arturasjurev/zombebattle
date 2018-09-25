@@ -28,7 +28,7 @@ const (
 type Event struct {
 	Type   string
 	Actor  string
-	X, Y   int
+	X, Y   int64
 	Points int
 	Hits   []string
 }

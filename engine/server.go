@@ -14,6 +14,7 @@ import (
 
 var killSignals = []os.Signal{syscall.SIGTERM, os.Interrupt, os.Kill}
 
+// Server holds information about game server.
 type Server struct {
 	Addr        string
 	DefaultRoom types.Room
@@ -22,6 +23,35 @@ type Server struct {
 	stop        chan os.Signal
 	command     chan types.Event
 	roomsMtx    sync.Mutex
+}
+
+// Run starts to listen for events and handle them.
+func (s *Server) Run() {
+	s.init()
+	s.startRooms()
+	for {
+		select {
+		case connection := <-s.newClient:
+			go s.acceptClient(connection)
+		case command := <-s.command:
+			// FIXME: For now only one EventNew is supported.
+			// FIXME: New maps will always be rooms.TheWall rooms.
+			s.createRoom(command.Actor, command.X)
+		case <-s.stop:
+			s.Shutdown()
+			return
+		}
+	}
+}
+
+// Shutdown will stop server
+func (s *Server) Shutdown() {}
+
+// AddRoom will registers new room into server.
+func (s *Server) AddRoom(r types.ServerRoom) {
+	s.roomsMtx.Lock()
+	s.Rooms = append(s.Rooms, r)
+	s.roomsMtx.Unlock()
 }
 
 func (s *Server) init() error {
@@ -42,32 +72,6 @@ func (s *Server) init() error {
 	return s.listen()
 }
 
-func (s *Server) Run() {
-	s.init()
-	s.startRooms()
-	for {
-		select {
-		case connection := <-s.newClient:
-			go s.acceptClient(connection)
-		case command := <-s.command:
-			// FIXME: For now only one EventNew is supported.
-			// FIXME: New maps will always be rooms.TheWall rooms.
-			s.createRoom(command.Actor, command.X)
-		case <-s.stop:
-			s.Shutdown()
-			return
-		}
-	}
-}
-
-func (s *Server) Shutdown() {}
-
-func (s *Server) AddRoom(r types.ServerRoom) {
-	s.roomsMtx.Lock()
-	s.Rooms = append(s.Rooms, r)
-	s.roomsMtx.Unlock()
-}
-
 func (s *Server) startRooms() {
 	s.roomsMtx.Lock()
 	for _, r := range s.Rooms {
@@ -76,7 +80,7 @@ func (s *Server) startRooms() {
 	s.roomsMtx.Unlock()
 }
 
-func (s *Server) createRoom(name string, world int) {
+func (s *Server) createRoom(name string, world int64) {
 	log.Printf("creating new room")
 	room := &rooms.TrainingGrounds{}
 	room.SetName(name)

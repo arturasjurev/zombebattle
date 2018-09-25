@@ -9,14 +9,26 @@ import (
 
 func main() {
 
+	/*
+		server := &engine.Server{
+			Addr: ":3333",
+			DefaultRoom: &rooms.TrainingGrounds{
+				Zombies: []types.Zombie{
+					&zombies.Dummy{},
+				},
+			},
+		}
+	*/
+
 	server := &engine.Server{
 		Addr: ":3333",
-		DefaultRoom: &rooms.TrainingGrounds{
+		DefaultRoom: &rooms.TheWall{
 			Zombies: []types.Zombie{
-				&zombies.Dummy{},
+				&zombies.Crawler{},
 			},
 		},
 	}
 
 	server.Run()
+
 }

@@ -9,6 +9,8 @@ import (
 )
 
 var (
+	// ErrBadInput will be returned when command cannot be identified or
+	// parsed into types.Event
 	ErrBadInput = errors.New("bad command, won't parse")
 )
 
@@ -85,19 +87,19 @@ func parseShoot(cmd []string) (types.Event, error) {
 	// parse X from command
 	x, err := strconv.Atoi(cmd[1])
 	if err != nil {
-		return types.Event{}, err
+		return types.Event{}, ErrBadInput
 	}
 
 	// parse Y from command
 	y, err := strconv.Atoi(cmd[2])
 	if err != nil {
-		return types.Event{}, err
+		return types.Event{}, ErrBadInput
 	}
 
 	event := types.Event{
 		Type: types.EventShoot,
-		X:    x,
-		Y:    y,
+		X:    int64(x),
+		Y:    int64(y),
 		// FIXME: this is bad. We reach player name only in room, so
 		// for demo, we will append this event with player name in room.
 		//Player: "player",
