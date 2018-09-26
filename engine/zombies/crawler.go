@@ -47,8 +47,9 @@ func (z *Crawler) GetName() string {
 
 // Hit will be called when player hits this zombie. As this zombie should be
 // used in TheWall room, it is room responsibility to kill and respawn zombie.
-func (z *Crawler) Hit() {
+func (z *Crawler) Hit() bool {
 	log.Printf("zombie '%s' got hit", z.name)
+	return true
 }
 
 // Kill zombie. Room should call this when we want to force-kill this zombie.

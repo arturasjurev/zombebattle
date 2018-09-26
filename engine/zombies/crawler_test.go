@@ -8,24 +8,24 @@ import (
 	"github.com/sheirys/zombebattle/engine/zombies"
 )
 
-func TestDummy(t *testing.T) {
+func TestCrawler(t *testing.T) {
 	events := make(chan types.Event, 1)
 	ctx := context.Background()
 	event := types.Event{}
 
-	dummy := &zombies.Dummy{}
-	dummy.Summon(ctx, events)
-	dummy.Run()
+	crawler := &zombies.Crawler{}
+	crawler.Summon(ctx, events)
+	crawler.Run()
 
-	dummy.Reset(5, 5)
-	dummy.Next()
+	crawler.Reset(5, 5)
+	crawler.Next()
 	event = <-events
 
 	if event.Type != types.EventWalk {
 		t.Errorf("unexpected event. got: '%s', want: '%s'", event.Type, types.EventWalk)
 	}
 
-	if event.X != 5 {
+	if event.X != 4 {
 		t.Errorf("unexpected x position. got: %d, want: %d", event.X, 5)
 	}
 
@@ -33,9 +33,9 @@ func TestDummy(t *testing.T) {
 		t.Errorf("unexpected x position. got: %d, want: %d", event.Y, 5)
 	}
 
-	x, y := dummy.GetPos()
+	x, y := crawler.GetPos()
 
-	if x != 5 {
+	if x != 4 {
 		t.Errorf("unexpected x position. got: %d, want: %d", event.X, 5)
 	}
 
@@ -43,11 +43,11 @@ func TestDummy(t *testing.T) {
 		t.Errorf("unexpected x position. got: %d, want: %d", event.Y, 5)
 	}
 
-	if name := dummy.GetName(); name == "" {
+	if name := crawler.GetName(); name == "" {
 		t.Errorf("dummy does not have name. expected name.")
 	}
 
-	if dummy.Hit() {
-		t.Errorf("expected that dummy cannot be killed")
+	if !crawler.Hit() {
+		t.Errorf("crawler should be dead now")
 	}
 }

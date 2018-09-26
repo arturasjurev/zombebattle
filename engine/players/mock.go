@@ -30,3 +30,6 @@ func (m *MockPlayer) ProcessEvent(e types.Event) {}
 func (m *MockPlayer) ProduceEvent(e types.Event) {
 	m.Events <- e
 }
+
+// Drop should drop client connection.
+func (m *MockPlayer) Drop() {}

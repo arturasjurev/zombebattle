@@ -30,8 +30,10 @@ type Zombie interface {
 	// GetPos should return position of zombie.
 	GetPos() (x, y int64)
 
-	// Hit will be called when zombie gets an arrow in his ass.
-	Hit()
+	// Hit will be called when zombie gets an arrow in his ass. if true is
+	// returned, that means this zombie died. This method allows us to have
+	// zombies that has more than 1 HP.
+	Hit() bool
 
 	// Next should force zombie to move.
 	Next()

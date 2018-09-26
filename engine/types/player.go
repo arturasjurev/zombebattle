@@ -5,4 +5,5 @@ type Player interface {
 	GetEvent() (Event, bool)
 	ProcessEvent(e Event)
 	ProduceEvent(e Event)
+	Drop()
 }

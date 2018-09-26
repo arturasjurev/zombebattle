@@ -75,6 +75,7 @@ func (s *Server) init() error {
 func (s *Server) startRooms() {
 	s.roomsMtx.Lock()
 	for _, r := range s.Rooms {
+		r.Room.Init()
 		r.Room.Run()
 	}
 	s.roomsMtx.Unlock()
@@ -82,8 +83,10 @@ func (s *Server) startRooms() {
 
 func (s *Server) createRoom(name string, world int64) {
 	log.Printf("creating new room")
-	room := &rooms.TrainingGrounds{}
+	room := &rooms.TheWall{}
+	room.Init()
 	room.SetName(name)
+	room.Run()
 	s.AddRoom(types.ServerRoom{
 		Room:    room,
 		Default: false,
@@ -123,6 +126,7 @@ func (s *Server) acceptClient(c net.Conn) {
 	for _, r := range s.Rooms {
 		if r.Room.Name() == client.SelectedRoom() {
 			r.Room.AddPlayer(client)
+			go client.Run()
 			break
 		}
 	}

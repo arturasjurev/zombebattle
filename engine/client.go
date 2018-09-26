@@ -100,6 +100,11 @@ func (c *Client) Notify(msg string) {
 	c.Conn.Write([]byte(msg))
 }
 
+// Drop will disconnect client
+func (c *Client) Drop() {
+	c.Conn.Close()
+}
+
 // SelectedRoom will return room name that client wants to join.
 func (c *Client) SelectedRoom() string {
 	return c.selectedRoom

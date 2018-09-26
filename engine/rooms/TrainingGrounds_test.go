@@ -2,7 +2,6 @@ package rooms_test
 
 import (
 	"testing"
-	"time"
 
 	"github.com/sheirys/zombebattle/engine/players"
 	"github.com/sheirys/zombebattle/engine/rooms"
@@ -18,7 +17,7 @@ func TestTrainingGrounds(t *testing.T) {
 	}
 
 	room := &rooms.TrainingGrounds{}
-	room.Run()
+	room.Init()
 	room.AddZombie(zombie)
 	room.AddPlayer(player)
 
@@ -33,7 +32,7 @@ func TestTrainingGrounds(t *testing.T) {
 	})
 
 	// let the room process chan events
-	time.Sleep(time.Microsecond)
+	room.Process()
 
 	if room.PlayersWon() {
 		t.Errorf("should be impossible to win TrainingGrounds for players")

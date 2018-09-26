@@ -14,11 +14,11 @@ func TestTheWallShoot(t *testing.T) {
 
 	zombie := &zombies.Crawler{}
 	player := &players.MockPlayer{
-		Events: make(chan types.Event),
+		Events: make(chan types.Event, 1),
 	}
 
 	room := &rooms.TheWall{}
-	room.Run()
+	room.Init()
 	room.AddZombie(zombie)
 	room.AddPlayer(player)
 
@@ -32,8 +32,10 @@ func TestTheWallShoot(t *testing.T) {
 		Y:    5,
 	})
 
+	room.Process()
+
 	// let the room process chan events
-	time.Sleep(time.Microsecond)
+	time.Sleep(1 * time.Microsecond)
 
 	x, _ := zombie.GetPos()
 
@@ -50,7 +52,7 @@ func TestTheWallPlayersWin(t *testing.T) {
 	}
 
 	room := &rooms.TheWall{}
-	room.Run()
+	room.Init()
 	room.AddZombie(zombie)
 	room.AddPlayer(player)
 
@@ -61,7 +63,7 @@ func TestTheWallPlayersWin(t *testing.T) {
 			X:    x,
 			Y:    y,
 		})
-		time.Sleep(time.Millisecond)
+		room.Process()
 	}
 
 	if !room.PlayersWon() {
@@ -78,13 +80,13 @@ func TestTheWallZombiesWin(t *testing.T) {
 	zombie := &zombies.Crawler{}
 
 	room := &rooms.TheWall{}
-	room.Run()
+	room.Init()
 	room.AddZombie(zombie)
 
 	for i := 0; i < rooms.TheWallMaxZombieScore; i++ {
 		zombie.Reset(1, 1)
 		zombie.Next()
-		time.Sleep(time.Millisecond)
+		room.Process()
 	}
 
 	if !room.ZombiesWon() {

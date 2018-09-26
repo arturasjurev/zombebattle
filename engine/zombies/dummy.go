@@ -46,8 +46,9 @@ func (z *Dummy) GetName() string {
 }
 
 // Hit will be called when player hits this zombie.
-func (z *Dummy) Hit() {
+func (z *Dummy) Hit() bool {
 	log.Printf("zombie '%s' got hit", z.name)
+	return false
 }
 
 // Kill kills zombie. Killed zombie does not move.

@@ -9,23 +9,15 @@ import (
 
 func main() {
 
-	/*
-		server := &engine.Server{
-			Addr: ":3333",
-			DefaultRoom: &rooms.TrainingGrounds{
-				Zombies: []types.Zombie{
-					&zombies.Dummy{},
-				},
-			},
-		}
-	*/
-
 	server := &engine.Server{
 		Addr: ":3333",
-		DefaultRoom: &rooms.TheWall{
+		DefaultRoom: &rooms.TrainingGrounds{
 			Zombies: []types.Zombie{
-				&zombies.Crawler{},
+				&zombies.Dummy{},
 			},
+		},
+		Rooms: []types.ServerRoom{
+			{Room: &rooms.TheWall{}, Default: false},
 		},
 	}
 

@@ -63,24 +63,47 @@ func (p *TrainingGrounds) Stop() error {
 	return nil
 }
 
+// Init will do some room preparations.
+func (p *TrainingGrounds) Init() error {
+	if p.name == "" {
+		p.name = "TRAINING-GROUNDS"
+	}
+	p.zombieEvents = make(chan types.Event)
+	p.playerEvents = make(chan types.Event)
+	p.ctx, p.stopFunc = context.WithCancel(context.Background())
+
+	// summon all pre-defined zombies.
+	for _, zombie := range p.Zombies {
+		zombie.Summon(p.ctx, p.zombieEvents)
+		zombie.Run()
+	}
+	return nil
+}
+
 // Run will initialize this room.
 func (p *TrainingGrounds) Run() error {
-	p.prepare()
 	go func() {
 		for {
-			select {
-			case playerEvent := <-p.playerEvents:
-				switch playerEvent.Type {
-				case types.EventShoot:
-					booms := p.processShootEvent(playerEvent)
-					p.sendEventToPlayers(booms)
-				default:
-				}
-			case zombieEvent := <-p.zombieEvents:
-				p.sendEventToPlayers(zombieEvent)
+			if err := p.Process(); err != nil {
+				return
 			}
 		}
 	}()
+	return nil
+}
+
+func (p *TrainingGrounds) Process() error {
+	select {
+	case playerEvent := <-p.playerEvents:
+		switch playerEvent.Type {
+		case types.EventShoot:
+			booms := p.processShootEvent(playerEvent)
+			p.sendEventToPlayers(booms)
+		default:
+		}
+	case zombieEvent := <-p.zombieEvents:
+		p.sendEventToPlayers(zombieEvent)
+	}
 	return nil
 }
 
@@ -106,6 +129,7 @@ func (p *TrainingGrounds) processShootEvent(e types.Event) types.Event {
 		x, y := zombie.GetPos()
 		if x == e.X && y == e.Y {
 			hits = append(hits, zombie.GetName())
+			zombie.Hit()
 		}
 	}
 	shootResult := types.Event{
@@ -115,23 +139,6 @@ func (p *TrainingGrounds) processShootEvent(e types.Event) types.Event {
 		Hits:   hits,
 	}
 	return shootResult
-}
-
-// init will do some room preparations.
-func (p *TrainingGrounds) prepare() error {
-	if p.name == "" {
-		p.name = "TRAINING-GROUNDS"
-	}
-	p.zombieEvents = make(chan types.Event)
-	p.playerEvents = make(chan types.Event)
-	p.ctx, p.stopFunc = context.WithCancel(context.Background())
-
-	// summon all pre-defined zombies.
-	for _, zombie := range p.Zombies {
-		zombie.Summon(p.ctx, p.zombieEvents)
-		zombie.Run()
-	}
-	return nil
 }
 
 func (p *TrainingGrounds) hello() string {
