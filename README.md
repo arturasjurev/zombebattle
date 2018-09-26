@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/sheirys/zombebattle/branch/master/graph/badge.svg)](https://codecov.io/gh/sheirys/zombebattle)
 [![GoDoc](https://godoc.org/github.com/sheirys/zombebattle/engine?status.svg)](https://godoc.org/github.com/sheirys/zombebattle/engine)
 
-`go get github.com/sheirys/zombebattle/engine`
+`go get -d github.com/sheirys/zombebattle/engine`
 
 # zombebattle
 
