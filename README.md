@@ -2,6 +2,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/sheirys/zombebattle)](https://goreportcard.com/report/github.com/sheirys/zombebattle)
 [![codecov](https://codecov.io/gh/sheirys/zombebattle/branch/master/graph/badge.svg)](https://codecov.io/gh/sheirys/zombebattle)
 [![GoDoc](https://godoc.org/github.com/sheirys/zombebattle/engine?status.svg)](https://godoc.org/github.com/sheirys/zombebattle/engine)
+
+`go get github.com/sheirys/zombebattle/engine`
+
 # zombebattle
 
 zombebattle is simple framework to implement game based on mysterium network [Communication channel specification](https://github.com/mysteriumnetwork/winter-is-coming/blob/master/quests/Talk_to_Zombies.md#communication-channel-specification). **This project should be considered as framework to implement game based on this specification**. You will find some example server implementations in `engine/examples`.
